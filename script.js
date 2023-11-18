@@ -1,22 +1,31 @@
 document.getElementById('searchBtn').addEventListener('click', function() {
     const city = document.getElementById('cityInput').value;
     const apiKey = 'bd01bc2635c934b37257f0e5cb3c9572';
+
+    fetchCurrentWeather(city, apiKey);
+    fetchForecast(city, apiKey);
+});
+
+function fetchCurrentWeather(city, apiKey) {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
     fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
+        .then(data => updateWeatherDashboard(data))
+        .catch(error => console.error('Error:', error));
+}
+
+function fetchForecast(city, apiKey) {
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+
+    fetch(forecastUrl)
+        .then(response => response.json())
         .then(data => {
-            updateWeatherDashboard(data);
+            displayHourlyForecast(data);
+            displayDailyForecast(data);
         })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-});
+        .catch(error => console.error('Error:', error));
+}
 
 function updateWeatherDashboard(data) {
     document.getElementById('temperature').textContent = `Temperature: ${data.main.temp}°C (Feels like: ${data.main.feels_like}°C)`;
@@ -29,9 +38,10 @@ function updateWeatherDashboard(data) {
     document.getElementById('visibility').textContent = `Visibility: ${data.visibility / 1000} km`;
     document.getElementById('cloudiness').textContent = `Cloudiness: ${data.clouds.all}%`;
 }
+
 function displayHourlyForecast(data) {
     const hourlyForecastDiv = document.getElementById('hourlyForecast');
-    hourlyForecastDiv.innerHTML = ''; 
+    hourlyForecastDiv.innerHTML = '';
 
     for (let i = 0; i < 5; i++) {
         const forecast = data.list[i];
@@ -46,7 +56,34 @@ function displayHourlyForecast(data) {
         hourlyForecastDiv.appendChild(forecastDiv);
     }
 }
+
 function displayDailyForecast(data) {
-const dailyForecastDiv = document.getElementById('dailyForecast');
-dailyForecastDiv.innerHTML = '';
+    const dailyForecastDiv = document.getElementById('dailyForecast');
+    dailyForecastDiv.innerHTML = '';
+
+    let dailyData = {};
+    data.list.forEach(forecast => {
+        const date = forecast.dt_txt.split(' ')[0];
+        if (!dailyData[date]) {
+            dailyData[date] = [];
+        }
+        dailyData[date].push(forecast);
+    });
+
+    for (let date in dailyData) {
+        const dailyForecasts = dailyData[date];
+        const avgTemp = dailyForecasts.reduce((acc, val) => acc + val.main.temp, 0) / dailyForecasts.length;
+        const icon = dailyForecasts[Math.floor(dailyForecasts.length / 2)].weather[0].icon;
+        const description = dailyForecasts[Math.floor(dailyForecasts.length / 2)].weather[0].description;
+
+        const forecastDiv = document.createElement('div');
+        forecastDiv.classList.add('forecast-item');
+        forecastDiv.innerHTML = `
+            <h4>${new Date(dailyForecasts[0].dt_txt).toLocaleDateString()}</h4>
+            <img src="http://openweathermap.org/img/wn/${icon}.png" alt="Weather Icon">
+            <p>Avg Temp: ${avgTemp.toFixed(1)}°C</p>
+            <p>${description}</p>
+        `;
+        dailyForecastDiv.appendChild(forecastDiv);
+    }
 }
