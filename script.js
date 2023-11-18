@@ -1,31 +1,22 @@
 document.getElementById('searchBtn').addEventListener('click', function() {
     const city = document.getElementById('cityInput').value;
     const apiKey = 'bd01bc2635c934b37257f0e5cb3c9572';
-
-    fetchCurrentWeather(city, apiKey);
-    fetchForecast(city, apiKey);
-});
-
-function fetchCurrentWeather(city, apiKey) {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
     fetch(url)
-        .then(response => response.json())
-        .then(data => updateWeatherDashboard(data))
-        .catch(error => console.error('Error:', error));
-}
-
-function fetchForecast(city, apiKey) {
-    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
-
-    fetch(forecastUrl)
-        .then(response => response.json())
-        .then(data => {
-            displayHourlyForecast(data);
-            displayDailyForecast(data);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
         })
-        .catch(error => console.error('Error:', error));
-}
+        .then(data => {
+            updateWeatherDashboard(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
 
 function updateWeatherDashboard(data) {
     document.getElementById('temperature').textContent = `Temperature: ${data.main.temp}°C (Feels like: ${data.main.feels_like}°C)`;
@@ -38,10 +29,9 @@ function updateWeatherDashboard(data) {
     document.getElementById('visibility').textContent = `Visibility: ${data.visibility / 1000} km`;
     document.getElementById('cloudiness').textContent = `Cloudiness: ${data.clouds.all}%`;
 }
-
 function displayHourlyForecast(data) {
     const hourlyForecastDiv = document.getElementById('hourlyForecast');
-    hourlyForecastDiv.innerHTML = '';
+    hourlyForecastDiv.innerHTML = ''; 
 
     for (let i = 0; i < 5; i++) {
         const forecast = data.list[i];
