@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Dashboard</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <title>Compact Weather Dashboard</title>
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Weather Dashboard</h1>
-        </header>
-        <section class="search-section">
-            <input type="text" id="searchInput" placeholder="Enter city name">
-            <button id="searchBtn">Search</button>
-        </section>
-        <section class="weather-info">
-            <h2>Current Weather</h2>
-            <div id="weatherDisplay">
-            </div>
-        </section>
-        <section class="recent-searches">
-            <h2>Recent Searches</h2>
-            <ul id="recentSearchList">
-            </ul>
-        </section>
+    <div class="weather-container">
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button id="searchBtn">Search</button>
+        <div id="weatherDetails">
+            <p id="temperature"></p>
+            <p id="weatherCondition"></p>
+            <img id="weatherIcon" src="" alt="Weather Icon" hidden>
+            <p id="wind"></p>
+            <p id="humidity"></p>
+            <p id="pressure"></p>
+            <p id="visibility"></p>
+            <p id="cloudiness"></p>
+        </div>
     </div>
+    <div class="forecast-container">
+        <h2>Hourly Forecast</h2>
+        <div id="hourlyForecast"></div>
 
+        <h2>Daily Forecast</h2>
+        <div id="dailyForecast"></div>
+    </div>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
     <script src="script.js"></script> 
 </body>
 </html>
