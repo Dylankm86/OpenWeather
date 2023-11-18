@@ -46,3 +46,7 @@ function displayHourlyForecast(data) {
         hourlyForecastDiv.appendChild(forecastDiv);
     }
 }
+function displayDailyForecast(data) {
+const dailyForecastDiv = document.getElementById('dailyForecast');
+dailyForecastDiv.innerHTML = '';
+}
