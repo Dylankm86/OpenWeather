@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compact Weather Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <div class="weather-dashboard">
-        <div id="currentWeather">
-            <h2>Current Weather</h2>
-            <img id="weatherIcon" src="" alt="Weather Icon">
+    <div class="weather-container">
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button id="searchBtn">Search</button>
+        <div id="weatherDetails">
             <p id="temperature"></p>
-            <p id="weatherDescription"></p>
+            <p id="weatherCondition"></p>
+            <img id="weatherIcon" src="" alt="Weather Icon" hidden>
             <p id="wind"></p>
             <p id="humidity"></p>
             <p id="pressure"></p>
@@ -21,7 +22,6 @@
             <p id="sunriseSunset"></p>
         </div>
     </div>
-
-    <script src="script.js"></script>
+    <script src="script.js"></script> 
 </body>
 </html>
