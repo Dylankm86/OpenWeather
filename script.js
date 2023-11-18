@@ -70,7 +70,10 @@ function displayDailyForecast(data) {
         dailyData[date].push(forecast);
     });
 
-    for (let date in dailyData) {
+    const daysToDisplay = Math.min(Object.keys(dailyData).length, 5);
+
+    for (let i = 0; i < daysToDisplay; i++) {
+        const date = Object.keys(dailyData)[i];
         const dailyForecasts = dailyData[date];
         const avgTemp = dailyForecasts.reduce((acc, val) => acc + val.main.temp, 0) / dailyForecasts.length;
         const icon = dailyForecasts[Math.floor(dailyForecasts.length / 2)].weather[0].icon;
@@ -87,3 +90,22 @@ function displayDailyForecast(data) {
         dailyForecastDiv.appendChild(forecastDiv);
     }
 }
+
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+
+darkModeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+
+    // Toggle button text and styles
+    if (body.classList.contains('dark-mode')) {
+        darkModeToggle.textContent = 'Toggle Light Mode';
+        darkModeToggle.style.backgroundColor = '#fff';
+        darkModeToggle.style.color = '#000';
+    } else {
+        darkModeToggle.textContent = 'Toggle Dark Mode';
+        darkModeToggle.style.backgroundColor = '#000';
+        darkModeToggle.style.color = '#fff';
+    }
+});
+
